@@ -52,12 +52,16 @@ jobs:
         path: **/TestResults/*.trx
 
   package:
+    name: Criar pacote
+    needs: build-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Criar pacote
         run: dotnet pack App/App.csproj -c Release -o out
+
       - uses: actions/upload-artifact@v4
         with:
-        name: nuget-package
-        path: out/*.nupkg
+          name: nuget-package
+          path: out/*.nupkg
