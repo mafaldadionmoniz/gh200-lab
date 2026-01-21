@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 env:
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: '8.0.417'
 
 jobs:
   build-test:
