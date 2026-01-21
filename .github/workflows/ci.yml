@@ -2,9 +2,9 @@ name: CI (.NET)
 
 on:
   push:
-	  branches: [ "master" ]
+    branches: [ "master" ]
   pull_request:
-	  branches: [ "master" ]
+    branches: [ "master" ]
   workflow_dispatch:
 
 permissions:
@@ -15,51 +15,49 @@ env:
 
 jobs:
   build-test:
-	  name: Build & Test (${{ matrix.os }})
-	  runs-on: ${{ matrix.os }}
-	strategy:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+  strategy:
   	matrix:
     	os: [ubuntu-latest, windows-latest]
-	steps:
-  	- uses: actions/checkout@v4
+  steps:
+    - uses: actions/checkout@v4
 
-  	- name: Setup .NET
-    	uses: actions/setup-dotnet@v4
-    	with:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
       	dotnet-version: ${{ env.DOTNET_VERSION }}
 
-  	- name: Cache NuGet
-    	uses: actions/cache@v4
-    	with:
+    - name: Cache NuGet
+      uses: actions/cache@v4
+      with:
       	path: ~/.nuget/packages
-      	key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+      key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
       	restore-keys: ${{ runner.os }}-nuget-
 
-  	- name: Restore
-    	run: dotnet restore
+    - name: Restore
+      run: dotnet restore
 
-  	- name: Build
-    	run: dotnet build --no-restore -c Release
+    - name: Build
+      run: dotnet build --no-restore -c Release
 
-  	- name: Test
-    	run: dotnet test --no-build -c Release --logger "trx;LogFileName=test.trx"
+    - name: Test
+      run: dotnet test --no-build -c Release --logger "trx;LogFileName=test.trx"
 
-  	- name: Publicar artefactos de testes
-    	if: always()
-    	uses: actions/upload-artifact@v4
-    	with:
+    - name: Publicar artefactos de testes
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
       	name: test-results-${{ matrix.os }}
-      	path: **/TestResults/*.trx
+      path: **/TestResults/*.trx
 
   package:
-	name: Package
-	needs: build-test
-	runs-on: ubuntu-latest
-	steps:
-  	- uses: actions/checkout@v4
-  	- name: Criar pacote
-    	run: dotnet pack App/App.csproj -c Release -o out
-  	- uses: actions/upload-artifact@v4
-    	with:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - name: Criar pacote
+      run: dotnet pack App/App.csproj -c Release -o out
+    - uses: actions/upload-artifact@v4
+      with:
       	name: nuget-package
-      	path: out/*.nupkg
+      path: out/*.nupkg
