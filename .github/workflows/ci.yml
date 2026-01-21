@@ -51,13 +51,13 @@ jobs:
         name: test-results-${{ matrix.os }}
         path: **/TestResults/*.trx
 
-package:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
-    - name: Criar pacote
-      run: dotnet pack App/App.csproj -c Release -o out
-    - uses: actions/upload-artifact@v4
-      with:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Criar pacote
+        run: dotnet pack App/App.csproj -c Release -o out
+      - uses: actions/upload-artifact@v4
+        with:
         name: nuget-package
-      path: out/*.nupkg
+        path: out/*.nupkg
