@@ -12,39 +12,59 @@ permissions:
 
 jobs:
   build-test:
+    timeout-minutes: 30
     name: Build & Test (${{ matrix.os }})
-	  runs-on: ${{ matrix.os }}
-	  strategy:
-  	  matrix:
-        os: [ubuntu-latest]   # <-- testa só Ubuntu primeiro
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
 
-	  steps:
-  	  - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-  	  - name: Setup .NET (SDK 8.x)
+      - name: Setup .NET (SDK 8.x)
         uses: actions/setup-dotnet@v4
         with:
-      	  dotnet-version: '8.0.x'
+          dotnet-version: '8.0.x'
 
-  	   - name: dotnet --info
-    	   run: dotnet --info
+      - name: dotnet --info
+        run: dotnet --info
 
-  	    - name: Restore
-    	    run: dotnet restore
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
-  	    - name: Build
-    	    run: dotnet build --no-restore -c Release
+      - name: Restore
+        run: dotnet restore
 
-  	    - name: Test
-    	    run: dotnet test --no-build -c Release --logger "trx;LogFileName=test.trx"
+      - name: Build
+        run: dotnet build --no-restore -c Release
 
-  	    - name: Publicar artefactos de testes
-    	    if: always()
-          uses: actions/upload-artifact@v4
-          with:
-            name: test-results-${{ matrix.os }}
-            path: "**/TestResults/*.trx"
-    	uses: actions/upload-artifact@v4
-    	with:
-      	name: test-results-${{ matrix.os }}
-      	path: "**/TestResults/*.trx"
+      - name: Test
+        run: dotnet test --no-build -c Release --logger "trx;LogFileName=test.trx"
+
+      - name: Publicar artefactos de testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}
+          path: "**/TestResults/*.trx"
+
+  package:
+    name: Criar pacote
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Criar pacote
+        run: dotnet pack App/App.csproj -c Release -o out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: out/*.nupkg
