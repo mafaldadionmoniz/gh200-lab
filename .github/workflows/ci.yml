@@ -51,7 +51,7 @@ jobs:
         name: test-results-${{ matrix.os }}
         path: **/TestResults/*.trx
 
-  package:
+package:
   runs-on: ubuntu-latest
   steps:
     - uses: actions/checkout@v4
