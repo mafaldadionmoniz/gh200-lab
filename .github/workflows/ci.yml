@@ -17,39 +17,39 @@ jobs:
   build-test:
     name: Build & Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-  strategy:
-    matrix:
-      os: [ubuntu-latest, windows-latest]
-  steps:
-    - uses: actions/checkout@v4
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Cache NuGet
-      uses: actions/cache@v4
-      with:
-      path: ~/.nuget/packages
-      key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-      restore-keys: ${{ runner.os }}-nuget-
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: ${{ runner.os }}-nuget-
 
-    - name: Restore
-      run: dotnet restore
+      - name: Restore
+        run: dotnet restore
 
-    - name: Build
-      run: dotnet build --no-restore -c Release
+      - name: Build
+        run: dotnet build --no-restore -c Release
 
-    - name: Test
-      run: dotnet test --no-build -c Release --logger "trx;LogFileName=test.trx"
+      - name: Test
+        run: dotnet test --no-build -c Release --logger "trx;LogFileName=test.trx"
 
-    - name: Publicar artefactos de testes
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results-${{ matrix.os }}
-        path: **/TestResults/*.trx
+      - name: Publicar artefactos de testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}
+          path: **/TestResults/*.trx
   package:
     name: Criar pacote
     needs: build-test
