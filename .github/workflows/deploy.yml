@@ -54,6 +54,5 @@ jobs:
         run: |
           echo "Simulação de deploy com ligação:"
           echo $MY_CONN
-      	echo "Simulação de deploy com ligação:"
-      	echo $MY_CONN
-
+          echo "Simulação de deploy com ligação:"
+          echo $MY_CONN
