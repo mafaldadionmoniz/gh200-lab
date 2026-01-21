@@ -39,13 +39,13 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore App/App.csproj
 
       - name: Build
-        run: dotnet build --no-restore -c Release
+        run: dotnet build App/App.csproj --no-restore -c Release
 
       - name: Test
-        run: dotnet test --no-build -c Release --logger "trx;LogFileName=test.trx"
+        run: dotnet test App/App.csproj --no-build -c Release --logger "trx;LogFileName=test.trx"
 
       - name: Publicar artefactos de testes
         if: always()
