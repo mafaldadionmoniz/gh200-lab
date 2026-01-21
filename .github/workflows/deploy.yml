@@ -11,48 +11,48 @@ permissions:
 
 jobs:
   build:
-	  name: Build
-	  runs-on: ubuntu-latest
-	  steps:
+    name: Build
+	runs-on: ubuntu-latest
+	steps:
   	  - uses: actions/checkout@v4
 
   	  - name: Setup .NET
-    	  uses: actions/setup-dotnet@v4
-    	  with:
+        uses: actions/setup-dotnet@v4
+    	with:
       	  dotnet-version: "8.0.x"
 
   	  - name: Restore
-    	  run: dotnet restore App/App.csproj
+        run: dotnet restore App/App.csproj
 
   	  - name: Build
-    	  run: dotnet build App/App.csproj --no-restore -c Release
+        run: dotnet build App/App.csproj --no-restore -c Release
 
   deploy:
-	  name: Deploy to Production
-	  needs: build
-	  runs-on: ubuntu-latest
+    name: Deploy to Production
+	needs: build
+	runs-on: ubuntu-latest
 
 	# 🌟 Ambiente com aprovação obrigatória (deploy gate)
-	  environment:
-  	  name: production
+	environment:
+      name: production
   	  url: https://example.com/myapp   # opcional
 
-	  steps:
+    steps:
   	  - uses: actions/checkout@v4
 
   	  - name: Setup .NET
-    	  uses: actions/setup-dotnet@v4
-    	  with:
+        uses: actions/setup-dotnet@v4
+    	with:
       	  dotnet-version: "8.0.x"
 
   	  - name: Use environment secret
-    	  run: |
+    	run: |
       	  echo "Ligação (parcial): ${MY_CONN:0:10}..."
-    	  env:
+    	env:
       	  MY_CONN: ${{ secrets.MY_CONN }}
 
   	  - name: Fake deploy (demo)
-    	  run: |
+        run: |
           echo "Simulação de deploy com ligação:"
           echo $MY_CONN
       	echo "Simulação de deploy com ligação:"
