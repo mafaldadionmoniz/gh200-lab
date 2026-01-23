@@ -1,0 +1,14 @@
+name: Análise de falhas
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Passo com Sucesso
+        run: echo "Isto vai funcionar"
+      
+      - name: Simular Erro de Script
+        run: |
+          echo "A tentar executar um comando inexistente..."
+          comando_que_nao_existe #Isto causará o erro do Job
