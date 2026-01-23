@@ -17,4 +17,4 @@ jobs:
     needs: build # Este job depende da conclusão com sucesso do job "build"
     steps:
       - name: Tentativa de deploy
-       run: echo "Este passo nunca será executado porque o 'build' falhou."
+        run: echo "Este passo nunca será executado porque o 'build' falhou."
