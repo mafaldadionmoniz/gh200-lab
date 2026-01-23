@@ -12,3 +12,9 @@ jobs:
         run: |
           echo "A tentar executar um comando inexistente..."
           comando_que_nao_existe #Isto causará o erro do Job
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build # Este job depende da conclusão com sucesso do job "build"
+    steps:
+      - name: Tentativa de deploy
+       run: echo "Este passo nunca será executado porque o 'build' falhou."
