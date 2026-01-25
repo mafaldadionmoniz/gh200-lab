@@ -13,5 +13,4 @@ runs:
   steps:
     - name: Ecoar saudação
       shell: bash
-      run: |
-        echo "Olá ${{ inputs.nome_utilizador }}"
+      run: echo "Olá ${{ inputs.nome_utilizador }}"
