@@ -1,1 +1,17 @@
 
+name: "Saudação"
+description: "Imprime uma saudação com o nome do utilizador"
+inputs:
+  nome_utilizador:
+    description: "Nome do utilizador a saudar"
+    required: true
+    # Opcional: se quiseres um valor por omissão, descomenta a linha abaixo
+    # default: "Mundo"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Ecoar saudação
+      shell: bash
+      run: |
+        echo "Olá ${{ inputs.nome_utilizador }}"
