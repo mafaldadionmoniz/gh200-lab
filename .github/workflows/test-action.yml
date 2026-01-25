@@ -1,4 +1,4 @@
-name: Testar Ação Local
+name: Testar Ação Local (fixada a SHA)
 
 on:
   workflow_dispatch:
@@ -8,10 +8,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Fazer checkout do repositório
+      # Checkout "normal" do repo na ref do evento (branch/PR/tag atual)
+      - name: Checkout do repositório (padrão)
         uses: actions/checkout@v4
 
-      - name: Executar a ação local
-        uses: ./.github/actions/hello-world/
+      # Checkout "fixado" apenas da pasta da ação noutra diretoria, usando a SHA da tag
+      - name: Checkout da AÇÃO fixada à SHA
+        uses: actions/checkout@v4
+        with:
+          # O próprio repositório atual
+          repository: ${{ github.repository }}
+          # <-- coloca aqui a SHA que extraíste da tua tag v1.0.0
+          ref: 0571b12cec91c67f2410ca5d5d50c282680b980a
+          # Faz checkout para uma subpasta separada
+          path: pinned_action
+
+      # Executa a AÇÃO a partir da pasta fixada
+      - name: Executar a ação local (fixada)
+        uses: ./pinned_action/.github/actions/hello-world/
         with:
           nome_utilizador: "Mafalda"
