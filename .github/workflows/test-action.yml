@@ -25,7 +25,14 @@ jobs:
           # traz o histórico completo (evita refs “rasas”)
           fetch-depth: 0
 
-      
+      - name: Listar pasta da action (fixada)
+        run: |
+          ls -la pinned_action/.github/actions/hello-world || true
+
+      - name: Mostrar primeiras linhas do action.yml
+        run: |
+          sed -n '1,120p' pinned_action/.github/actions/hello-world/action.yml
+
       # (Opcional) Verifica rapidamente que o action.yml está legível
       - name: Verificar action.yml fixado
         run: |
