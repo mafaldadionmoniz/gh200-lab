@@ -22,6 +22,16 @@ jobs:
           ref: 0571b12cec91c67f2410ca5d5d50c282680b980a
           # Faz checkout para uma subpasta separada
           path: pinned_action
+          # traz o histórico completo (evita refs “rasas”)
+          fetch-depth: 0
+
+      
+      # (Opcional) Verifica rapidamente que o action.yml está legível
+      - name: Verificar action.yml fixado
+        run: |
+          echo "::group::Conteúdo do action.yml (SHA fixada)"
+          sed -n '1,120p' pinned_action/.github/actions/hello-world/action.yml
+          echo "::endgroup::"
 
       # Executa a AÇÃO a partir da pasta fixada
       - name: Executar a ação local (fixada)
