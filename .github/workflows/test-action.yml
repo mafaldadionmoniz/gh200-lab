@@ -1,1 +1,17 @@
+name: Testar Ação Local
 
+on:
+  workflow_dispatch:
+
+jobs:
+  executar-acao:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fazer checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Executar a ação local
+        uses: ./.github/actions/hello-world/
+        with:
+          nome_utilizador: "Mafalda"
