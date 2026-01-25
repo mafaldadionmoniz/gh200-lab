@@ -1,4 +1,3 @@
-
 name: "Saudação"
 description: "Imprime uma saudação com o nome do utilizador"
 inputs:
