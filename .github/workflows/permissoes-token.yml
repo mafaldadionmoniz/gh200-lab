@@ -1,0 +1,25 @@
+name: Testar Permissões do GITHUB_TOKEN
+
+on:
+  workflow_dispatch:
+
+# 🔒 Restringir permissões globalmente
+permissions:
+  contents: read      # apenas leitura
+  issues: none        # sem permissões para mexer em issues
+  pull-requests: none
+
+jobs:
+  testar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Tentar criar issue (vai falhar)
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/issues \
+            -d '{"title":"Issue criada automaticamente","body":"Teste de permissões"}'
