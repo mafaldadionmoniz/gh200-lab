@@ -5,8 +5,8 @@ on:
 
 # 🔒 Restringir permissões globalmente
 permissions:
-  contents: read      # apenas leitura
-  issues: none        # sem permissões para mexer em issues
+  contents: read      
+  issues: write       # agora pode criar issues
   pull-requests: none
 
 jobs:
